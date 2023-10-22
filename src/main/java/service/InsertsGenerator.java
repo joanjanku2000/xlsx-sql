@@ -21,7 +21,6 @@ public class InsertsGenerator {
     private static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + "(" + COLUMN_NAMES + ") VALUES " + VALUES;
 
     public static String generateInserts(String tableName, Map<Integer, List<String>> rowsMap) {
-        List<String> generatedInserts = new ArrayList<>();
         Map<Integer, String> columnsMap = simpleListToMap(extractColumnNames(rowsMap)); // <columnId,columnName>
         String columnValues = columnsMap.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.joining(COMMA));
         removeFirstRow(rowsMap);
