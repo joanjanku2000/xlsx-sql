@@ -20,7 +20,7 @@ public interface SqlGenerator {
     String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " + UPDATE_PAIRS + " WHERE " + PREDICATES;
      static final String AND = " and ";
      static final String SEMICOLON = ";";
-     static final String EQUALS = "=";
+     static final String EQUALZ = "=";
      static final String ASTERISK = "*"; // the column which has this will be used in the predicate
 
     String generate(String tableName, Map<Integer, List<String>> rowsMap);

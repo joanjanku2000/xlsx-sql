@@ -62,7 +62,7 @@ public class UpdateGenerator implements SqlGenerator {
             return collect(predicatesPair, AND);
         }
         private static String collect(Map<String,String> map, String joining) {
-            return map.entrySet().stream().map(e -> e.getKey() + EQUALS + e.getValue()).collect(Collectors.joining(joining));
+            return map.entrySet().stream().map(e -> e.getKey() + EQUALZ + e.getValue()).collect(Collectors.joining(joining));
         }
         public UpdateWrap(Map<String, String> updatesPair, Map<String, String> predicatesPair) {
             this.updatesPair = updatesPair;

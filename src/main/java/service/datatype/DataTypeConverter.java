@@ -5,6 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 import static service.datatype.DataType.*;
 
 public class DataTypeConverter {
+    private DataTypeConverter(){
+        // hidden
+    }
 
     private static final String TRUE = "true";
     private static final String FALSE = "false";

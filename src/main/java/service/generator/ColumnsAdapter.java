@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ColumnsAdapter {
+    private ColumnsAdapter(){
+        // hidden
+    }
 
     /**
      * Returns the list in MAP format where key = index, value = list value in the specified index
