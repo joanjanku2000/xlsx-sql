@@ -18,10 +18,10 @@ public interface SqlGenerator {
     String PREDICATES = "#PREDICATES";
     String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + "(" + COLUMN_NAMES + ") VALUES " + VALUES;
     String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " + UPDATE_PAIRS + " WHERE " + PREDICATES;
-     static final String AND = " and ";
-     static final String SEMICOLON = ";";
-     static final String EQUALZ = "=";
-     static final String ASTERISK = "*"; // the column which has this will be used in the predicate
+    String AND = " and ";
+    String SEMICOLON = ";";
+    String EQUALZ = "=";
+    String ASTERISK = "*"; // the column which has this will be used in the predicate
 
     String generate(String tableName, Map<Integer, List<String>> rowsMap);
 

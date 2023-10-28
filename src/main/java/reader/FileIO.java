@@ -1,10 +1,13 @@
 package reader;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,9 +16,9 @@ import java.util.Map;
 import static java.lang.String.valueOf;
 import static java.util.Objects.requireNonNull;
 
-public class FileReader {
+public class FileIO {
 
-    private FileReader() {
+    private FileIO() {
         // hidden
     }
 
@@ -37,7 +40,13 @@ public class FileReader {
             throw new RuntimeException(e);
 
         }
-
+    }
+    public static void toTxt(String path, String content){
+        try {
+            FileUtils.writeStringToFile(new File(path),content, Charset.defaultCharset());
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     private static Map<Integer, List<String>> extractMapFromSheet(Sheet sheet) {
