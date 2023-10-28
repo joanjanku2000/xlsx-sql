@@ -1,8 +1,9 @@
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.logging.log4j.simple.SimpleLoggerContextFactory;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.InsertsGenerator;
+import service.SqlGenerator;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
-import static service.InsertsGenerator.generateInserts;
+
 
 public class InsertsGeneratorTest {
     private static final Logger log = LoggerFactory.getLogger(InsertsGeneratorTest.class);
@@ -43,7 +44,8 @@ public class InsertsGeneratorTest {
         values = values.replaceFirst(COMMA,EMPTY);
         inserts = inserts.replace(VALUES,values);
 
-        String generatedSql = generateInserts(tableName,rowsMap);
+        SqlGenerator sqlGenerator = new InsertsGenerator();
+        String generatedSql = sqlGenerator.generate(tableName,rowsMap);
         log.info("Expected {}",inserts);
         log.info("Actual {}",generatedSql);
         assertEquals(inserts,generatedSql);
