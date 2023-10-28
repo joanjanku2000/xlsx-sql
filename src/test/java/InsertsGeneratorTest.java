@@ -20,7 +20,7 @@ public class InsertsGeneratorTest extends BaseTest {
     public void testGenerateInserts() {
         String tableName = "users";
         String inserts = INSERT_STATEMENT.replace(TABLE_NAME,tableName).replace(COLUMN_NAMES,COLUMNS);
-        String values = "";
+        StringBuilder values = new StringBuilder();
         Map<Integer, List<String>> rowsMap = new HashMap<>();
         rowsMap.put(0, Arrays.asList(COLUMNS.split(COMMA)));
         for (int i = 1; i < 10; i++){
@@ -28,10 +28,10 @@ public class InsertsGeneratorTest extends BaseTest {
             String email = RandomStringUtils.random(8,RANDOM_CHARS);
             String password = RandomStringUtils.random(10,RANDOM_CHARS);
             rowsMap.put(i,Arrays.asList(username,email,password));
-            values+=COMMA +OPENING_PARANTHESIS + adjustValue(username) + COMMA + adjustValue(email) + COMMA + adjustValue(password) + CLOSING_PARANTHESIS;
+            values.append(COMMA + OPENING_PARANTHESIS).append(adjustValue(username)).append(COMMA).append(adjustValue(email)).append(COMMA).append(adjustValue(password)).append(CLOSING_PARANTHESIS);
         }
-        values = values.replaceFirst(COMMA,EMPTY);
-        inserts = inserts.replace(VALUES,values);
+        values = new StringBuilder(values.toString().replaceFirst(COMMA, EMPTY));
+        inserts = inserts.replace(VALUES, values.toString());
 
         SqlGenerator sqlGenerator = new InsertsGenerator();
         String generatedSql = sqlGenerator.generate(tableName,rowsMap);

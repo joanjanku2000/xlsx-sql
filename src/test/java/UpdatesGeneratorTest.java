@@ -19,7 +19,7 @@ public class UpdatesGeneratorTest extends BaseTest {
     public void testGenerateUpdates() {
         SqlGenerator updateGenerator = new UpdateGenerator();
         String tableName = "users";
-        String values = "";
+        StringBuilder values = new StringBuilder();
         Map<Integer, List<String>> rowsMap = new HashMap<>();
         rowsMap.put(0, Arrays.asList(COLUMNS_UPDATE.split(COMMA)));
         for (int i = 1; i < 20; i++) {
@@ -28,10 +28,10 @@ public class UpdatesGeneratorTest extends BaseTest {
             String password = RandomStringUtils.random(10,RANDOM_CHARS);
             Integer age = new Random().nextInt() ;
             rowsMap.put(i,Arrays.asList(username,email,password,String.valueOf(age)));
-            values+=UPDATE_STATEMENT.replace(TABLE_NAME,tableName).replace(UPDATE_PAIRS, "password='"+password+"'," + "email='" + email + "',"+"age="+age).replace(PREDICATES,"username='"+username + "';");
+            values.append(UPDATE_STATEMENT.replace(TABLE_NAME, tableName).replace(UPDATE_PAIRS, "password='" + password + "'," + "email='" + email + "'," + "age=" + age).replace(PREDICATES, "username='" + username + "';"));
         }
         log.info("Rows map {}", rowsMap);
      //   log.info("Final SQLs {}",updateGenerator.generate(tableName,rowsMap));
-        Assert.assertEquals(values,updateGenerator.generate(tableName,rowsMap));
+        Assert.assertEquals(values.toString(),updateGenerator.generate(tableName,rowsMap));
     }
 }
