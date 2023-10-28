@@ -1,9 +1,9 @@
-package service;
+package service.datatype;
 
 import org.apache.commons.lang3.StringUtils;
 
 import static org.apache.commons.lang3.StringUtils.isNumeric;
-import static service.DataType.*;
+import static service.datatype.DataType.*;
 
 public class DataTypeConverter {
 

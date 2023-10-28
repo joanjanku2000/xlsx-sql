@@ -1,4 +1,4 @@
-package service;
+package service.generator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.substringBefore;
-import static service.DataTypeConverter.adjustValue;
+import static service.datatype.DataTypeConverter.adjustValue;
 
 public class UpdateGenerator implements SqlGenerator {
     private static final Logger log = LoggerFactory.getLogger(SqlGenerator.class);
@@ -50,8 +50,6 @@ public class UpdateGenerator implements SqlGenerator {
         }
 
         log.info("Res {}",updatesWraps);
-        List<String> finalReturn = updatesWraps.stream().map(uw -> updateStatementTemplate.replace(UPDATE_PAIRS,uw.toUpdateValues()).replace(PREDICATES,uw.toPredicateValues())).collect(Collectors.toList());
-        log.info("Final statements {}", String.join("\n", finalReturn));
         return updatesWraps.stream().map(uw -> updateStatementTemplate.replace(UPDATE_PAIRS,uw.toUpdateValues()).replace(PREDICATES,uw.toPredicateValues())).collect(Collectors.joining(SEMICOLON));
     }
 

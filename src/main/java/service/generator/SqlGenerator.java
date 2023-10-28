@@ -1,4 +1,4 @@
-package service;
+package service.generator;
 
 import java.util.List;
 import java.util.Map;
@@ -16,11 +16,11 @@ public interface SqlGenerator {
     String EMPTY = "";
     String UPDATE_PAIRS = "#UPDATE_PAIRS";
     String PREDICATES = "#PREDICATES";
-    String AND = "#AND";
     String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + "(" + COLUMN_NAMES + ") VALUES " + VALUES;
     String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " + UPDATE_PAIRS + " WHERE " + PREDICATES;
 
     String generate(String tableName, Map<Integer, List<String>> rowsMap);
+
     default void removeFirstRow(Map<Integer, List<String>> rowsMap) {
         rowsMap.remove(0);
     }

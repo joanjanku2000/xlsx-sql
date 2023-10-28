@@ -1,10 +1,12 @@
-package service;
+package service.generator;
+
+import service.datatype.DataTypeConverter;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static service.ColumnsAdapter.simpleListToMap;
+import static service.generator.ColumnsAdapter.simpleListToMap;
 
 public class InsertsGenerator implements SqlGenerator {
 

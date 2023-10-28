@@ -2,8 +2,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import service.InsertsGenerator;
-import service.SqlGenerator;
+import service.generator.InsertsGenerator;
+import service.generator.SqlGenerator;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
-import static service.DataTypeConverter.adjustValue;
+import static service.datatype.DataTypeConverter.adjustValue;
 
 
 public class InsertsGeneratorTest {
