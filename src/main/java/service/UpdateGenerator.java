@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.substringBefore;
+import static service.DataTypeConverter.adjustValue;
 
 public class UpdateGenerator implements SqlGenerator {
     private static final Logger log = LoggerFactory.getLogger(SqlGenerator.class);
@@ -21,7 +22,6 @@ public class UpdateGenerator implements SqlGenerator {
     @Override
     public String generate(String tableName, Map<Integer, List<String>> rowsMap) {
         String updateStatementTemplate = UPDATE_STATEMENT.replace(TABLE_NAME, tableName);
-        List<String> updates = new ArrayList<>();
         Map<String, String> updatesPair = new HashMap<>();
         Map<String, String> predicatesPair = new HashMap<>();
         List<UpdateWrap> updatesWraps = new ArrayList<>();
@@ -33,13 +33,13 @@ public class UpdateGenerator implements SqlGenerator {
                     .forEach(
                             value -> updatesPair.put (
                                     columnNames.get(totalValues.indexOf(value)).contains(ASTERISK) ? ASTERISK : columnNames.get(totalValues.indexOf(value)),
-                                    value
+                                    adjustValue(value)
                             )
                     );
             totalValues.forEach(
                     value -> predicatesPair.put(
                             columnNames.get(totalValues.indexOf(value)).contains(ASTERISK) ? substringBefore(columnNames.get(totalValues.indexOf(value)),ASTERISK) : ASTERISK,
-                            value
+                            adjustValue(value)
                     )
             );
             predicatesPair.remove(ASTERISK);
@@ -74,13 +74,6 @@ public class UpdateGenerator implements SqlGenerator {
             this.predicatesPair = predicatesPair;
         }
 
-        public Map<String, String> getUpdatesPair() {
-            return updatesPair;
-        }
-
-        public Map<String, String> getPredicatesPair() {
-            return predicatesPair;
-        }
 
         @Override
         public String toString() {

@@ -11,11 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
+import static service.DataTypeConverter.adjustValue;
 
 
 public class InsertsGeneratorTest {
     private static final Logger log = LoggerFactory.getLogger(InsertsGeneratorTest.class);
-
+    private static final char[] RANDOM_CHARS = {'a','b','c','d','e','f','g','h','i'};
     private static final String TABLE_NAME = "#TABLE_NAME";
     private static final String COLUMN_NAMES = "#COLUMN_NAMES";
     private static final String COMMA = ",";
@@ -35,11 +36,11 @@ public class InsertsGeneratorTest {
         Map<Integer, List<String>> rowsMap = new HashMap<>();
         rowsMap.put(0, Arrays.asList(COLUMNS.split(COMMA)));
         for (int i = 1; i < 10; i++){
-            String username = RandomStringUtils.random(5);
-            String email = RandomStringUtils.random(8);
-            String password = RandomStringUtils.random(10);
+            String username = RandomStringUtils.random(5,RANDOM_CHARS);
+            String email = RandomStringUtils.random(8,RANDOM_CHARS);
+            String password = RandomStringUtils.random(10,RANDOM_CHARS);
             rowsMap.put(i,Arrays.asList(username,email,password));
-            values+=COMMA +OPENING_PARANTHESIS + username + COMMA + email + COMMA + password + CLOSING_PARANTHESIS;
+            values+=COMMA +OPENING_PARANTHESIS + adjustValue(username) + COMMA + adjustValue(email) + COMMA + adjustValue(password) + CLOSING_PARANTHESIS;
         }
         values = values.replaceFirst(COMMA,EMPTY);
         inserts = inserts.replace(VALUES,values);
