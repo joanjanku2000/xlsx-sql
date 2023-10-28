@@ -2,7 +2,6 @@ package service.datatype;
 
 import org.apache.commons.lang3.StringUtils;
 
-import static org.apache.commons.lang3.StringUtils.isNumeric;
 import static service.datatype.DataType.*;
 
 public class DataTypeConverter {
@@ -24,5 +23,14 @@ public class DataTypeConverter {
 
     private static boolean isBoolean(String value) {
         return value.compareToIgnoreCase(TRUE) == 0 || value.compareToIgnoreCase(FALSE) == 0;
+    }
+
+    private static boolean isNumeric(String value) {
+        try {
+            Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 }

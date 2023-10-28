@@ -14,20 +14,8 @@ import static junit.framework.TestCase.assertEquals;
 import static service.datatype.DataTypeConverter.adjustValue;
 
 
-public class InsertsGeneratorTest {
+public class InsertsGeneratorTest extends BaseTest {
     private static final Logger log = LoggerFactory.getLogger(InsertsGeneratorTest.class);
-    private static final char[] RANDOM_CHARS = {'a','b','c','d','e','f','g','h','i'};
-    private static final String TABLE_NAME = "#TABLE_NAME";
-    private static final String COLUMN_NAMES = "#COLUMN_NAMES";
-    private static final String COMMA = ",";
-    private static final String VALUES = "#VALUES";
-    private static final String OPENING_PARANTHESIS = "(";
-    private static final String CLOSING_PARANTHESIS = ")";
-    private static final String EMPTY = "";
-    private static final String COLUMNS = "username,email,password";
-    private static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + "(" + COLUMN_NAMES + ") VALUES " + VALUES;
-
-
     @Test
     public void testGenerateInserts() {
         String tableName = "users";

@@ -13,18 +13,15 @@ import static org.apache.commons.lang3.StringUtils.substringBefore;
 import static service.datatype.DataTypeConverter.adjustValue;
 
 public class UpdateGenerator implements SqlGenerator {
-    private static final Logger log = LoggerFactory.getLogger(SqlGenerator.class);
-    private static final String AND = " and ";
-    private static final String SEMICOLON = ";";
-    private static final String EQUALS = "=";
-    private static final String ASTERISK = "*"; // the column which has this will be used in the predicate
+    private static final Logger log = LoggerFactory.getLogger(UpdateGenerator.class);
+
 
     @Override
     public String generate(String tableName, Map<Integer, List<String>> rowsMap) {
         String updateStatementTemplate = UPDATE_STATEMENT.replace(TABLE_NAME, tableName);
         Map<String, String> updatesPair = new HashMap<>();
         Map<String, String> predicatesPair = new HashMap<>();
-        List<UpdateWrap> updatesWraps = new ArrayList<>();
+        List<UpdateWrap> updatesWrap = new ArrayList<>();
         List<String> columnNames = extractColumnNames(rowsMap);
         removeFirstRow(rowsMap);
         for (Map.Entry<Integer, List<String>> row : rowsMap.entrySet()) {
@@ -42,15 +39,15 @@ public class UpdateGenerator implements SqlGenerator {
                             adjustValue(value)
                     )
             );
+            // clean-up
             predicatesPair.remove(ASTERISK);
             updatesPair.remove(ASTERISK);
-            updatesWraps.add(new UpdateWrap(new HashMap<>(updatesPair),new HashMap<>(predicatesPair)));
+            updatesWrap.add(new UpdateWrap(new HashMap<>(updatesPair),new HashMap<>(predicatesPair)));
             updatesPair.clear();
             predicatesPair.clear();
         }
-
-        log.info("Res {}",updatesWraps);
-        return updatesWraps.stream().map(uw -> updateStatementTemplate.replace(UPDATE_PAIRS,uw.toUpdateValues()).replace(PREDICATES,uw.toPredicateValues())).collect(Collectors.joining(SEMICOLON));
+        log.info("Res {}", updatesWrap);
+        return updatesWrap.stream().map(uw -> updateStatementTemplate.replace(UPDATE_PAIRS,uw.toUpdateValues()).replace(PREDICATES,uw.toPredicateValues())).collect(Collectors.joining(SEMICOLON)) + SEMICOLON;
     }
 
 
@@ -65,7 +62,7 @@ public class UpdateGenerator implements SqlGenerator {
             return collect(predicatesPair, AND);
         }
         private static String collect(Map<String,String> map, String joining) {
-            return map.entrySet().stream().map(e -> e.getValue() + UpdateGenerator.EQUALS + e.getKey()).collect(Collectors.joining(joining));
+            return map.entrySet().stream().map(e -> e.getKey() + EQUALS + e.getValue()).collect(Collectors.joining(joining));
         }
         public UpdateWrap(Map<String, String> updatesPair, Map<String, String> predicatesPair) {
             this.updatesPair = updatesPair;
