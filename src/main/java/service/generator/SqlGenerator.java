@@ -11,8 +11,8 @@ public interface SqlGenerator {
     String COLUMN_NAMES = "#COLUMN_NAMES";
     String COMMA = ",";
     String VALUES = "#VALUES";
-    String OPENING_PARANTHESIS = "(";
-    String CLOSING_PARANTHESIS = ")";
+    String OPENING_BRACKET = "(";
+    String CLOSING_BRACKET = ")";
     String EMPTY = "";
     String UPDATE_PAIRS = "#UPDATE_PAIRS";
     String PREDICATES = "#PREDICATES";

@@ -16,7 +16,7 @@ public class InsertsGenerator implements SqlGenerator {
         removeFirstRow(rowsMap);
         StringBuilder values = new StringBuilder();
         for (Map.Entry<Integer, List<String>> e : rowsMap.entrySet()) {
-            String value = OPENING_PARANTHESIS + e.getValue().stream().map(DataTypeConverter::adjustValue).collect(Collectors.joining(COMMA)) + CLOSING_PARANTHESIS;
+            String value = OPENING_BRACKET + e.getValue().stream().map(DataTypeConverter::adjustValue).collect(Collectors.joining(COMMA)) + CLOSING_BRACKET;
             values.append(COMMA).append(value);
         }
         return INSERT_STATEMENT.replace(TABLE_NAME, tableName).replace(COLUMN_NAMES, columnValues).replace(VALUES, values.toString().replaceFirst(COMMA, EMPTY));
