@@ -56,6 +56,12 @@ public interface SqlGenerator {
     default String removeNewLines(String value){
         return StringUtils.remove(value,"\n");
     }
+    default String adjustApostrophes(String value){
+        return StringUtils.replace(value,"'","");
+    }
+    default String adjust(String value){
+        return adjustApostrophes(removeNewLines(value));
+    }
 
     default boolean mustBeIgnored(String columnName) {
         return columnName.contains(OPENING_BRACKET) && columnName.contains(CLOSING_BRACKET);
