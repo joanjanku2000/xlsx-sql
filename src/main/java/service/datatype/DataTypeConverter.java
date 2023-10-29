@@ -14,7 +14,7 @@ public class DataTypeConverter {
     private static final String SINGLE_QUOTE = "'";
 
     public static String adjustValue(String value) {
-        return switch (getDataType(value)) {
+        return value == null || value.isEmpty() ? "NULL" : switch (getDataType(value)) {
             case STRING -> StringUtils.wrap(value, SINGLE_QUOTE);
             case BOOLEAN, NUMBER -> value;
         };
@@ -25,13 +25,13 @@ public class DataTypeConverter {
     }
 
     private static boolean isBoolean(String value) {
-        return value.compareToIgnoreCase(TRUE) == 0 || value.compareToIgnoreCase(FALSE) == 0;
+        return value != null ? value.compareToIgnoreCase(TRUE) == 0 || value.compareToIgnoreCase(FALSE) == 0 : false;
     }
 
     private static boolean isNumeric(String value) {
         try {
-            Integer.parseInt(value);
-        } catch (NumberFormatException e) {
+            Double.parseDouble(value);
+        } catch (Exception e) {
             return false;
         }
         return true;

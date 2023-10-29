@@ -1,5 +1,7 @@
 package service.generator;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +52,9 @@ public interface SqlGenerator {
 
     default String pureColumnName(String columnName) {
         return needsAdapting(columnName) ? substringBefore(columnName, GREATER_THAN) : columnName;
+    }
+    default String removeNewLines(String value){
+        return StringUtils.remove(value,"\n");
     }
 
     default boolean mustBeIgnored(String columnName) {

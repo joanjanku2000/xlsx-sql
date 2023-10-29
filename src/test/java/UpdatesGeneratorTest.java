@@ -29,7 +29,7 @@ public class UpdatesGeneratorTest extends BaseTest {
             Integer age = new Random().nextInt();
             String social = randomBetween(new String[]{"No", "Yes", "YHNA"});
             rowsMap.put(i,Arrays.asList(username,email,password,String.valueOf(age),social));
-            values.append(UPDATE_STATEMENT.replace(TABLE_NAME, tableName).replace(UPDATE_PAIRS, "password='" + password + "',social='"+convert(social) + "',email='" + email + "'," + "age=" + age  ).replace(PREDICATES, "username='" + username + "';"));
+            values.append(UPDATE_STATEMENT.replace(TABLE_NAME, tableName).replace(UPDATE_PAIRS, "password='" + password + "',social='"+convert(social) + "',email='" + email + "'," + "age=" + age).replace(PREDICATES, "username='" + username + "';"));
         }
         log.info("Rows map {}", rowsMap);
      //   log.info("Final SQLs {}",updateGenerator.generate(tableName,rowsMap));
