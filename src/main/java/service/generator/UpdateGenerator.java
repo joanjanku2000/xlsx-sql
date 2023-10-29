@@ -28,16 +28,22 @@ public class UpdateGenerator implements SqlGenerator {
             List<String> totalValues = row.getValue();
             totalValues
                     .forEach(
-                            value -> updatesPair.put (
-                                    columnNames.get(totalValues.indexOf(value)).contains(ASTERISK) ? ASTERISK : columnNames.get(totalValues.indexOf(value)),
-                                    adjustValue(value)
-                            )
+                            value -> {
+                                String columnName =  columnNames.get(totalValues.indexOf(value));
+                                updatesPair.put(
+                                        columnName.contains(ASTERISK) || mustBeIgnored(columnName) ? ASTERISK : pureColumnName(columnName),
+                                        adjustValue(needsAdapting(columnName) ? adaptValue(value, extractColumnTranslation(columnName)) : value)
+                                );
+                            }
                     );
             totalValues.forEach(
-                    value -> predicatesPair.put(
-                            columnNames.get(totalValues.indexOf(value)).contains(ASTERISK) ? substringBefore(columnNames.get(totalValues.indexOf(value)),ASTERISK) : ASTERISK,
-                            adjustValue(value)
-                    )
+                    value -> {
+                        String columnName =  columnNames.get(totalValues.indexOf(value));
+                        predicatesPair.put(
+                                columnName.contains(ASTERISK) && !mustBeIgnored(columnName) ? pureColumnName(substringBefore(columnName, ASTERISK)) : ASTERISK,
+                                adjustValue(needsAdapting(substringBefore(columnName, ASTERISK)) ? adaptValue(substringBefore(columnName, ASTERISK),extractColumnTranslation(substringBefore(columnName, ASTERISK))) : value)
+                        );
+                    }
             );
             // clean-up
             predicatesPair.remove(ASTERISK);
