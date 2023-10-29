@@ -1,5 +1,7 @@
 package service.generator;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,25 +38,44 @@ public interface SqlGenerator {
         rowsMap.remove(0);
     }
 
-
     default List<String> extractColumnNames(Map<Integer, List<String>> rowsMap) {
         return requireNonNull(rowsMap.get(COLUMN_NAMES_INDEX));
     }
 
-    default boolean columnNeedsAdapting(String columnName){
-        return columnName.contains(GREATER_THAN);
-    }
-    default Map<String ,String> extractColumnTranslation(String adaptedColumnName){
-        Map<String,String> toReturn = new HashMap<>();
-        String adaptions = substringAfter(adaptedColumnName,GREATER_THAN);
+    default Map<String, String> extractColumnTranslation(String adaptedColumnName) {
+        Map<String, String> toReturn = new HashMap<>();
+        String adaptions = substringAfter(adaptedColumnName, GREATER_THAN);
         String[] parts = adaptions.split(AMPERSAND);
-        stream(parts).forEach(s -> toReturn.put(s.split(EQUALZ)[0],s.split(EQUALZ)[1]));
+        stream(parts).forEach(s -> toReturn.put(s.split(EQUALZ)[0], s.split(EQUALZ)[1]));
         return toReturn;
     }
-    default String pureColumnName(String adaptedColumnName){
-        return substringBefore(adaptedColumnName,GREATER_THAN);
+
+    default String pureColumnName(String columnName) {
+        return needsAdapting(columnName) ? substringBefore(columnName, GREATER_THAN) : columnName;
     }
-    default boolean ignoreColumn(String columnName){
+    default String removeNewLines(String value){
+        return StringUtils.remove(value,"\n");
+    }
+    default String adjustApostrophes(String value){
+        return StringUtils.replace(value,"'","");
+    }
+    default String adjust(String value){
+        return adjustApostrophes(removeNewLines(value));
+    }
+
+    default boolean mustBeIgnored(String columnName) {
         return columnName.contains(OPENING_BRACKET) && columnName.contains(CLOSING_BRACKET);
+    }
+
+    default boolean needsAdapting(String columnName) {
+        return columnName.contains(GREATER_THAN);
+    }
+    default String adaptValue(String value,Map<String ,String> adaptions) {
+        for (Map.Entry<String,String> pair : adaptions.entrySet()) {
+            if (pair.getKey().compareToIgnoreCase(value) == 0) {
+                return pair.getValue();
+            }
+        }
+        return adaptions.isEmpty() ? value : adaptions.get(QUESTION_MARK);
     }
 }

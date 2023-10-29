@@ -53,7 +53,7 @@ public class FileIO {
         Map<Integer, List<String>> data = new HashMap<>();
         int i = 0;
         for (Row row : sheet) {
-            if (i == 500) break;
+           // if (i == 500) break;
             data.put(i, new ArrayList<>());
             for (Cell cell : row) {
                 if (requireNonNull(cell.getCellType()).equals(CellType.NUMERIC)) {

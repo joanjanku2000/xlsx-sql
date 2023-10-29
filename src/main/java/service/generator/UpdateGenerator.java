@@ -28,26 +28,37 @@ public class UpdateGenerator implements SqlGenerator {
             List<String> totalValues = row.getValue();
             totalValues
                     .forEach(
-                            value -> updatesPair.put (
-                                    columnNames.get(totalValues.indexOf(value)).contains(ASTERISK) ? ASTERISK : columnNames.get(totalValues.indexOf(value)),
-                                    adjustValue(value)
-                            )
+                            value -> {
+                                String columnName =  columnNames.get(totalValues.indexOf(value));
+                                if (!mustBeIgnored(columnName))
+                                    updatesPair.put(
+                                            columnName.contains(ASTERISK) ? ASTERISK : pureColumnName(columnName),
+                                            adjustValue(adjust(needsAdapting(columnName) ? adaptValue(value, extractColumnTranslation(columnName)) : value))
+                                    );
+                            }
                     );
             totalValues.forEach(
-                    value -> predicatesPair.put(
-                            columnNames.get(totalValues.indexOf(value)).contains(ASTERISK) ? substringBefore(columnNames.get(totalValues.indexOf(value)),ASTERISK) : ASTERISK,
-                            adjustValue(value)
-                    )
+                    value -> {
+                        String columnName =  columnNames.get(totalValues.indexOf(value));
+//                        log.info("Column {}",columnName);
+                        if (!mustBeIgnored(columnName))
+                            predicatesPair.put(
+                                    columnName.contains(ASTERISK) && !mustBeIgnored(columnName) ? pureColumnName(substringBefore(columnName, ASTERISK)) : ASTERISK,
+                                    adjustValue(adjust(needsAdapting(substringBefore(columnName, ASTERISK)) ? adaptValue(substringBefore(columnName, ASTERISK),extractColumnTranslation(substringBefore(columnName, ASTERISK))) : value))
+                            );
+                    }
             );
             // clean-up
             predicatesPair.remove(ASTERISK);
+            predicatesPair.remove(EMPTY);
+            updatesPair.remove(EMPTY);
             updatesPair.remove(ASTERISK);
             updatesWrap.add(new UpdateWrap(new HashMap<>(updatesPair),new HashMap<>(predicatesPair)));
             updatesPair.clear();
             predicatesPair.clear();
         }
-        log.info("Res {}", updatesWrap);
-        return updatesWrap.stream().map(uw -> updateStatementTemplate.replace(UPDATE_PAIRS,uw.toUpdateValues()).replace(PREDICATES,uw.toPredicateValues())).collect(Collectors.joining(SEMICOLON)) + SEMICOLON;
+//        log.info("Res {}", updatesWrap);
+        return updatesWrap.stream().filter(uw -> uw.updatesPair.size() > 0).map(uw -> updateStatementTemplate.replace(UPDATE_PAIRS,uw.toUpdateValues()).replace(PREDICATES,uw.toPredicateValues())).collect(Collectors.joining(SEMICOLON)) + SEMICOLON;
     }
 
 
@@ -62,7 +73,7 @@ public class UpdateGenerator implements SqlGenerator {
             return collect(predicatesPair, AND);
         }
         private static String collect(Map<String,String> map, String joining) {
-            return map.entrySet().stream().map(e -> e.getKey() + EQUALZ + e.getValue()).collect(Collectors.joining(joining));
+            return map.entrySet().stream().filter(e -> e.getKey() != null && !e.getKey().isEmpty()).map(e -> e.getKey() + EQUALZ + e.getValue()).collect(Collectors.joining(joining));
         }
         public UpdateWrap(Map<String, String> updatesPair, Map<String, String> predicatesPair) {
             this.updatesPair = updatesPair;

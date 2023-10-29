@@ -11,6 +11,6 @@ public class Main {
     public static void main(String[] args) {
         SqlGenerator sqlGenerator = new UpdateGenerator();
         Map<Integer, List<String>> fromExcel = FileIO.fromExcel("src/main/resources/data.xlsx");
-        FileIO.toTxt("sqls.txt",sqlGenerator.generate("certs",fromExcel).replace(";", ";\n"));
+        FileIO.toTxt("certs.sql",sqlGenerator.generate("certification",fromExcel).replace(";", ";\n"));
     }
 }
