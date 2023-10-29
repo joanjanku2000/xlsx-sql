@@ -40,7 +40,6 @@ public class UpdateGenerator implements SqlGenerator {
             totalValues.forEach(
                     value -> {
                         String columnName =  columnNames.get(totalValues.indexOf(value));
-//                        log.info("Column {}",columnName);
                         if (!mustBeIgnored(columnName))
                             predicatesPair.put(
                                     columnName.contains(ASTERISK) && !mustBeIgnored(columnName) ? pureColumnName(substringBefore(columnName, ASTERISK)) : ASTERISK,
@@ -57,7 +56,6 @@ public class UpdateGenerator implements SqlGenerator {
             updatesPair.clear();
             predicatesPair.clear();
         }
-//        log.info("Res {}", updatesWrap);
         return updatesWrap.stream().filter(uw -> uw.updatesPair.size() > 0).map(uw -> updateStatementTemplate.replace(UPDATE_PAIRS,uw.toUpdateValues()).replace(PREDICATES,uw.toPredicateValues())).collect(Collectors.joining(SEMICOLON)) + SEMICOLON;
     }
 
