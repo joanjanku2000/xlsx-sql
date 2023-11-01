@@ -10,6 +10,7 @@ import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
+import static service.datatype.DataTypeConverter.adjustValue;
 
 public interface SqlGenerator {
     Integer COLUMN_NAMES_INDEX = 0;
@@ -96,5 +97,11 @@ public interface SqlGenerator {
     }
     default String wrapInBrackets(String str){
         return OPENING_BRACKET + str + CLOSING_BRACKET;
+    }
+    default  String getValue(String columnName, String value) {
+        if (!mustBeIgnored(columnName)) {
+            return foreignKey(columnName) ? wrapInBrackets(selectStatement(columnName, adjustValue(value))) : adjustValue(adjust(needsAdapting(columnName) ? adaptValue(value, extractColumnTranslation(columnName)) : value));
+        }
+        return null;
     }
 }
