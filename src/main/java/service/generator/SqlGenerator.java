@@ -22,8 +22,11 @@ public interface SqlGenerator {
     String EMPTY = "";
     String UPDATE_PAIRS = "#UPDATE_PAIRS";
     String PREDICATES = "#PREDICATES";
+    String WHERE = " WHERE ";
+    String FOREIGN_KEY_INDICATOR = "<=>";
     String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + "(" + COLUMN_NAMES + ") VALUES " + VALUES;
-    String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " + UPDATE_PAIRS + " WHERE " + PREDICATES;
+    String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " + UPDATE_PAIRS + WHERE + PREDICATES;
+    String SELECT_STATEMENT = "SELECT distinct " + COLUMN_NAMES + " FROM " + TABLE_NAME + WHERE + PREDICATES;
     String AND = " and ";
     String SEMICOLON = ";";
     String EQUALZ = "=";
@@ -31,6 +34,8 @@ public interface SqlGenerator {
     String GREATER_THAN = ">";
     String QUESTION_MARK = "?";
     String AMPERSAND = "&";
+    String MINUS = "-";
+    String PIPE = "|";
 
     String generate(String tableName, Map<Integer, List<String>> rowsMap);
 
@@ -51,7 +56,7 @@ public interface SqlGenerator {
     }
 
     default String pureColumnName(String columnName) {
-        return needsAdapting(columnName) ? substringBefore(columnName, GREATER_THAN) : columnName;
+        return needsAdapting(columnName) ? foreignKey(columnName) ? substringBefore(columnName,FOREIGN_KEY_INDICATOR) : substringBefore(columnName, GREATER_THAN) : columnName;
     }
     default String removeNewLines(String value){
         return StringUtils.remove(value,"\n");
@@ -67,8 +72,19 @@ public interface SqlGenerator {
         return columnName.contains(OPENING_BRACKET) && columnName.contains(CLOSING_BRACKET);
     }
 
+    default boolean foreignKey(String columnName) {
+        return columnName.contains(FOREIGN_KEY_INDICATOR);
+    }
+    default String selectStatement(String columnName,String value){
+        String targetColumnProjection = substringBefore(substringAfter(columnName,FOREIGN_KEY_INDICATOR),MINUS);
+        String targetColumnPredicate = substringBefore(substringAfter(columnName,MINUS),PIPE);
+        String targetTableName = substringAfter(columnName,PIPE);
+        return SELECT_STATEMENT.replace(COLUMN_NAMES,targetColumnProjection).replace(TABLE_NAME,targetTableName).replace(PREDICATES,
+                 targetColumnPredicate +  EQUALZ + value);
+    }
+
     default boolean needsAdapting(String columnName) {
-        return columnName.contains(GREATER_THAN);
+        return columnName.contains(GREATER_THAN) ;
     }
     default String adaptValue(String value,Map<String ,String> adaptions) {
         for (Map.Entry<String,String> pair : adaptions.entrySet()) {
@@ -77,5 +93,8 @@ public interface SqlGenerator {
             }
         }
         return adaptions.isEmpty() ? value : adaptions.get(QUESTION_MARK);
+    }
+    default String wrapInBrackets(String str){
+        return OPENING_BRACKET + str + CLOSING_BRACKET;
     }
 }

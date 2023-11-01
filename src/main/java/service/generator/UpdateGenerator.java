@@ -33,7 +33,7 @@ public class UpdateGenerator implements SqlGenerator {
                                 if (!mustBeIgnored(columnName))
                                     updatesPair.put(
                                             columnName.contains(ASTERISK) ? ASTERISK : pureColumnName(columnName),
-                                            adjustValue(adjust(needsAdapting(columnName) ? adaptValue(value, extractColumnTranslation(columnName)) : value))
+                                            foreignKey(columnName) ? wrapInBrackets(selectStatement(columnName,adjustValue(value)))  : adjustValue(adjust(needsAdapting(columnName) ? adaptValue(value, extractColumnTranslation(columnName)) : value))
                                     );
                             }
                     );
@@ -43,7 +43,7 @@ public class UpdateGenerator implements SqlGenerator {
                         if (!mustBeIgnored(columnName))
                             predicatesPair.put(
                                     columnName.contains(ASTERISK) && !mustBeIgnored(columnName) ? pureColumnName(substringBefore(columnName, ASTERISK)) : ASTERISK,
-                                    adjustValue(adjust(needsAdapting(substringBefore(columnName, ASTERISK)) ? adaptValue(substringBefore(columnName, ASTERISK),extractColumnTranslation(substringBefore(columnName, ASTERISK))) : value))
+                                    foreignKey(columnName) ? wrapInBrackets(selectStatement(columnName,adjustValue(value)))  :  adjustValue(adjust(needsAdapting(substringBefore(columnName, ASTERISK)) ? adaptValue(substringBefore(columnName, ASTERISK),extractColumnTranslation(substringBefore(columnName, ASTERISK))) : value))
                             );
                     }
             );
