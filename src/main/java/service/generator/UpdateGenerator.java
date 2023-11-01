@@ -77,15 +77,6 @@ public class UpdateGenerator implements SqlGenerator {
             this.updatesPair = updatesPair;
             this.predicatesPair = predicatesPair;
         }
-
-
-        @Override
-        public String toString() {
-            return "UpdateWrap{" +
-                    "updatesPair=" + updatesPair +
-                    ", predicatesPair=" + predicatesPair +
-                    '}';
-        }
     }
 }
 

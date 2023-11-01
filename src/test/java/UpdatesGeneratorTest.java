@@ -1,3 +1,4 @@
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.IntegerRange;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -5,9 +6,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reader.FileIO;
 import service.generator.SqlGenerator;
 import service.generator.UpdateGenerator;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import static junit.framework.TestCase.assertEquals;
@@ -34,6 +38,13 @@ public class UpdatesGeneratorTest extends BaseTest {
         log.info("Rows map {}", rowsMap);
      //   log.info("Final SQLs {}",updateGenerator.generate(tableName,rowsMap));
         Assert.assertEquals(values.toString(),updateGenerator.generate(tableName,rowsMap));
+    }
+
+    @Test
+    public void realXlsxTest() throws IOException {
+        SqlGenerator sqlGenerator = new UpdateGenerator();
+        String res = sqlGenerator.generate("certification", FileIO.fromExcel("src/test/resources/data.xlsx"));
+        Assert.assertEquals(FileUtils.readFileToString(new File("src/test/resources/resultingSqls.sql")).replace("\n",""),res);
     }
 
     private static String randomBetween(String[] strs){

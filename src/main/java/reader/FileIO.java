@@ -38,14 +38,6 @@ public class FileIO {
             return extractMapFromSheet(sheet);
         } catch (IOException e) {
             throw new RuntimeException(e);
-
-        }
-    }
-    public static void toTxt(String path, String content){
-        try {
-            FileUtils.writeStringToFile(new File(path),content, Charset.defaultCharset());
-        } catch (Exception e){
-            throw new RuntimeException(e);
         }
     }
 
