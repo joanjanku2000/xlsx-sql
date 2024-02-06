@@ -3,10 +3,13 @@ package reader;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +21,7 @@ import static java.util.Objects.requireNonNull;
 
 public class FileIO {
 
+    static Logger logger = LoggerFactory.getLogger("test");
     private FileIO() {
         // hidden
     }
@@ -37,6 +41,17 @@ public class FileIO {
             Sheet sheet = workbook.getSheetAt(0);
             return extractMapFromSheet(sheet);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Map<Integer, List<String>> fromExcel(InputStream inputStream) {
+        logger.info("{}",inputStream);
+        try (Workbook workbook = new XSSFWorkbook(inputStream)) {
+            Sheet sheet = workbook.getSheetAt(0);
+            return extractMapFromSheet(sheet);
+        } catch (IOException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

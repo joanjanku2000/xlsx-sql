@@ -12,7 +12,7 @@ public class InsertsGenerator implements SqlGenerator {
 
     public String generate(String tableName, Map<Integer, List<String>> rowsMap) {
         Map<Integer, String> columnsMap = simpleListToMap(extractColumnNames(rowsMap)); // <columnId,columnName>
-        removeFirstRow(rowsMap);
+        removeFirstRow(rowsMap); // column names
         StringBuilder values = new StringBuilder();
         for (Map.Entry<Integer, List<String>> e : rowsMap.entrySet()) {
             List<String> valuesList = e.getValue();
