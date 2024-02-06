@@ -12,3 +12,4 @@ COLUMN_NAME                              ---              COLUMN_NAME <br>
 COLUMN_NAME*                             ---              WHERE COLUMN_NAME = VALUE <br>
 COLUMN_NAME>V=VALUE&S=VALUE_2&?=VALUE_3  ---              Values in the excel matching V are inserted/updated as VALUES , values in the excel matching S are inserted/updated as VALUE_2 , any other value is inserted/updated as VALUE_3<br>
 COLUMN_NAME<=>id-name|users              ---              insert/update value of COLUMN_NAME using Foreign Key Constraint - select id from users where name = VALUE<br>
+(COLUMN_NAME)                            ---              Ignore column
