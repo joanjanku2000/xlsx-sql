@@ -45,16 +45,6 @@ public class FileIO {
         }
     }
 
-    public static Map<Integer, List<String>> fromExcel(InputStream inputStream) {
-        logger.info("{}",inputStream);
-        try (Workbook workbook = new XSSFWorkbook(inputStream)) {
-            Sheet sheet = workbook.getSheetAt(0);
-            return extractMapFromSheet(sheet);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
 
     private static Map<Integer, List<String>> extractMapFromSheet(Sheet sheet) {
         Map<Integer, List<String>> data = new HashMap<>();
